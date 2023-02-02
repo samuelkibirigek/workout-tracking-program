@@ -33,13 +33,15 @@ time_stamp = datetime.now()
 date = time_stamp.strftime("%d/%m/%Y")
 time = time_stamp.strftime("%X")
 
+sheety_endpoint = "https://api.sheety.co/198d9027ea41ea054b7525a9a3b7029b/kibirigeWorkouts/workouts"
+
 for task in range(len(response_data)):
     data = response_data[task]
     name = data["user_input"].title()
     duration = data["duration_min"]
     calories = data["nf_calories"]
+
     # Entering the data into google sheets using sheety
-    sheety_endpoint = "https://api.sheety.co/198d9027ea41ea054b7525a9a3b7029b/kibirigeWorkouts/workouts"
     body = {
         "workout": {
             "date": date,
@@ -49,8 +51,21 @@ for task in range(len(response_data)):
             "calories": calories
         }
     }
-    sheety_response = requests.post(url=sheety_endpoint, json=body)
-    print(sheety_response.text)
+    # sheety_response = requests.post(url=sheety_endpoint, json=body)
+    # print(sheety_response.text)
+
+# Setting the authentication key and fetching data from the google sheet
+# After setting authentication key even when posting data you add headers parameter
+# in the example below we use get to return all the data in the google sheet as a json
+
+headers = {
+    "Authorization": "Bearer my_password"
+}
+sheety_get_response = requests.get(url=sheety_endpoint, headers=headers)
+print(sheety_get_response.json())
+
+
+
 
 
 
